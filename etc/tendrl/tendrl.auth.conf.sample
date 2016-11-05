@@ -1,0 +1,35 @@
+[general]
+etcd_server = 10.70.43.26
+etcd_port = 2379
+time_series_db = graphite
+time_series_db_server = 10.70.43.26
+time_series_db_port = 80
+
+[common]
+
+# Central store etcd port
+etcd_port = 2379
+
+# Central store etcd host/ip
+etcd_connection = 10.70.43.26
+
+# Path to log file
+log_level = DEBUG
+log_path = /var/log/tendrl/common.log
+log_cfg_path = /etc/tendrl/common_logging.yaml
+
+[tendrl_alerts]
+log_path = /var/log/tendrl-alerts.log
+log_cfg_path = /etc/tendrl/alerts_logging.yaml
+log_level = DEBUG
+admin_email_id = abc@redhat.com
+admin_email_smtp_port = 25
+admin_email_smtp_server = smtp.xyz.abc.com
+recipient_email_id = abc@gmail.com
+recipient_alert_subscriptions = *
+
+[tendrl_performance]
+performance_server_interface = 0.0.0.0
+log_cfg_path = /etc/tendrl/performance_monitoring_logging.yaml
+log_level = DEBUG
+
