@@ -1,0 +1,43 @@
+[general]
+time_series_db = graphite
+time_series_db_server = 0.0.0.0
+time_series_db_port = 80
+
+[bridge_common]
+
+# Central store etcd port
+etcd_port = 2379
+
+# Central store etcd host/ip
+etcd_connection = 0.0.0.0
+#time series db details
+time_series_db = graphite
+time_series_db_server = 0.0.0.0
+time_series_db_port = 80
+
+# Path to log file
+log_path = /var/log/tendrl/bridge_common.log
+log_level = DEBUG
+
+[tendrl_alerts]
+log_path = /var/log/tendrl-alerts.log
+log_level = DEBUG
+admin_email_id = abc@gmail.com
+admin_email_pass = TGPHb3JlQDkxXvvVVml0aZQTJp
+admin_email_ssl = True
+admin_smtp_port = 465
+admin_email_server = smtp.gmail.com
+recipient_email_id = abc@redhat.com
+recipient_alert_subscriptions = *
+
+[node_agent]
+# Path to log file
+log_level = DEBUG
+tendrl_exe_file_prefix = /tmp/.tendrl_runner
+log_cfg_path = /etc/tendrl/node_agent_logging.yaml
+
+[tendrl_performance]
+performance_server_interface = 0.0.0.0
+log_cfg_path = /etc/tendrl/performance_monitoring_logging.yaml
+log_level = DEBUG
+
