@@ -1,0 +1,1 @@
+ALERTS_DIRECTORY = "/alerts"

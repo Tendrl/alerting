@@ -3,9 +3,9 @@ import base64
 from tendrl.common.config import TendrlConfig
 import logging
 from tendrl.common.etcdobj.etcdobj import Server as etcd_server
-from etcd import EtcdKeyNotFound
+from etcd import EtcdKeyNotFound, EtcdConnectionFailed
 from tendrl.common.config import ConfigNotFound
-import socket
+from socket import error
 from ConfigParser import NoOptionError
 
 config = TendrlConfig()
@@ -26,30 +26,46 @@ class MailHandler():
                 else:
                     users.append(user)
                     return admin_user, users
-        except EtcdKeyNotFound as ex:
+        except (EtcdKeyNotFound, EtcdConnectionFailed) as ex:
             try:
                 email_id = config.get("tendrl_alerts", "admin_email_id")
                 email_smtp_server = config.get(
-                    "tendrl_alerts", "admin_email_smtp_server")
+                    "tendrl_alerts",
+                    "admin_email_smtp_server"
+                )
                 email_smtp_port = int(config.get(
-                    "tendrl_alerts", "admin_email_smtp_port"))
+                    "tendrl_alerts",
+                    "admin_email_smtp_port"
+                )
+                )
                 recipient_email = config.get(
-                    "tendrl_alerts", "recipient_email_id")
+                    "tendrl_alerts",
+                    "recipient_email_id"
+                )
                 recipient_subscriptions = config.get(
-                    "tendrl_alerts", "recipient_alert_subscriptions")
+                    "tendrl_alerts",
+                    "recipient_alert_subscriptions"
+                )
             except (ConfigNotFound, NoOptionError) as ex:
                 LOG.error('Error %s' % ex, exc_info=True)
                 raise ex
+            is_auth_enabled = False
             try:
                 auth = config.get("tendrl_alerts", "admin_auth")
                 try:
                     email_pass = base64.b64decode(config.get(
-                        "tendrl_alerts", "admin_email_pass"))
-                except (ConfigNotFound, NoOptionError) as ex:
-                    LOG.error(
-                        'User %s has chosen authentication but not provided the password' % email_id, exc_info=True)
+                        "tendrl_alerts",
+                        "admin_email_pass"
+                    )
+                    )
+                except (ConfigNotFound, NoOptionError, TypeError) as ex:
+                    is_auth_enabled = True
+                    LOG.error('User %s has chosen authentication but not \
+                        provided the password' % email_id, exc_info=True)
                     raise ex
             except (ConfigNotFound, NoOptionError) as ex:
+                if is_auth_enabled:
+                    raise ex
                 auth = ""
             admin_details = {
                 'email_id': email_id,
@@ -65,12 +81,14 @@ class MailHandler():
             }]
 
     def format_message(self):
-        return "Subject: [Alert] %s, %s threshold breached\n\n%s" % (self.alert['Plugin'], self.alert['Severity'], self.alert)
+        return "Subject: [Alert] %s, %s threshold breached\n\n%s" % (
+            self.alert['Plugin'], self.alert['Severity'], self.alert)
 
     def init_recipients(self):
         recipients = []
         for user in self.users:
-            if user['alert_subscriptions'] == '*' or self.alert['Plugin'] in user['alert_subscriptions']:
+            if user['alert_subscriptions'] == '*' or\
+                    self.alert['Plugin'] in user['alert_subscriptions']:
                 recipients.append(user['email_id'])
         return recipients
 
@@ -92,34 +110,55 @@ class MailHandler():
         if self.admin_user['auth'] == 'ssl':
             try:
                 server = smtplib.SMTP_SSL(
-                    self.admin_user['email_smtp_server'], self.admin_user['email_smtp_port'])
+                    self.admin_user['email_smtp_server'],
+                    self.admin_user['email_smtp_port']
+                )
                 return server
             except (smtplib.socket.gaierror, smtlib.SMTPException) as ex:
-                LOG.error('Failed to fetch client for smtp server %s and smtp port %s. Error %s' % (
-                    self.admin_user['email_smtp_server'], str(self.admin_user['email_smtp_port']), ex), exc_info=True)
+                LOG.error('Failed to fetch client for smtp server %s and smtp\
+                    port %s. Error %s' % (
+                    self.admin_user['email_smtp_server'],
+                    str(self.admin_user['email_smtp_port']),
+                    ex
+                ),
+                    exc_info=True)
         else:
             try:
                 server = smtplib.SMTP(
-                    self.admin_user['email_smtp_server'], self.admin_user['email_smtp_port'])
+                    self.admin_user['email_smtp_server'],
+                    self.admin_user['email_smtp_port']
+                )
                 if self.admin_user['auth'] != '':
                     server.starttls()
                 return server
             except (smtplib.socket.gaierror, smtlib.SMTPException) as ex:
-                LOG.error('Failed to fetch client for smtp server %s and smtp port %s. Error %s' % (
-                    self.admin_user['email_smtp_server'], str(self.admin_user['email_smtp_port']), ex), exc_info=True)
+                LOG.error('Failed to fetch client for smtp server %s and smtp\
+                    port %s. Error %s' % (
+                    self.admin_user['email_smtp_server'],
+                    str(self.admin_user['email_smtp_port']),
+                    ex
+                ),
+                    exc_info=True)
 
     def start(self):
         try:
             server = self.get_mail_client()
             server.ehlo()
             if self.admin_user['auth'] != "":
-                server.login(self.admin_user[
-                             'email_id'], self.admin_user['email_pass'])
+                server.login(
+                    self.admin_user['email_id'],
+                    self.admin_user['email_pass']
+                )
             for to in self.recipients:
-                server.sendmail(self.admin_user['email_id'], to, self.msg)
+                server.sendmail(
+                    self.admin_user['email_id'],
+                    to,
+                    self.msg
+                )
                 LOG.debug('Sent mail to %s to alert about %s' %
                           (to, self.msg), exc_info=True)
             server.close()
-        except (socket.error, smtplib.SMTPException, smtplib.SMTPAuthenticationError) as ex:
-            LOG.debug('Exception caught attempting to send %s to %s. Error %s' % (
-                self.msg, self.recipients, ex), exc_info=True)
+        except (error, smtplib.SMTPException,
+                smtplib.SMTPAuthenticationError) as ex:
+            LOG.debug('Exception caught attempting to send %s to %s.\
+                Error %s' % (self.msg, self.recipients, ex), exc_info=True)

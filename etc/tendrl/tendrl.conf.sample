@@ -1,26 +1,20 @@
-[general]
+[time_series]
 time_series_db = graphite
 time_series_db_server = 0.0.0.0
 time_series_db_port = 80
 
-[bridge_common]
+[common]
 
 # Central store etcd port
 etcd_port = 2379
 
 # Central store etcd host/ip
 etcd_connection = 0.0.0.0
-#time series db details
-time_series_db = graphite
-time_series_db_server = 0.0.0.0
-time_series_db_port = 80
 
 # Path to log file
-log_path = /var/log/tendrl/bridge_common.log
 log_level = DEBUG
 
 [tendrl_alerts]
-log_path = /var/log/tendrl-alerts.log
 log_level = DEBUG
 admin_email_id = abc@gmail.com
 admin_email_pass = TGPHb3JlQDkxXvvVVml0aZQTJp

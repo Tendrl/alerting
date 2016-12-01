@@ -1,8 +1,6 @@
-[general]
-etcd_server = 10.70.43.26
-etcd_port = 2379
+[time_series]
 time_series_db = graphite
-time_series_db_server = 10.70.43.26
+time_series_db_server = 0.0.0.0
 time_series_db_port = 80
 
 [common]
@@ -11,15 +9,13 @@ time_series_db_port = 80
 etcd_port = 2379
 
 # Central store etcd host/ip
-etcd_connection = 10.70.43.26
+etcd_connection = 0.0.0.0
 
 # Path to log file
 log_level = DEBUG
-log_path = /var/log/tendrl/common.log
 log_cfg_path = /etc/tendrl/common_logging.yaml
 
 [tendrl_alerts]
-log_path = /var/log/tendrl-alerts.log
 log_cfg_path = /etc/tendrl/alerts_logging.yaml
 log_level = DEBUG
 admin_email_id = abc@redhat.com
