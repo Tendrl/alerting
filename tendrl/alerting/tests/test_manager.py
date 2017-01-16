@@ -4,7 +4,7 @@ import sys
 sys.modules['tendrl.common.config'] = MagicMock()
 sys.modules['tendrl.common.log'] = MagicMock()
 from tendrl.alerting.api.manager import APIManager
-from tendrl.alerting.manager import Manager
+from tendrl.alerting.manager.manager import Manager
 from tendrl.alerting.watcher.manager import AlertsWatchManager
 del sys.modules['tendrl.common.config']
 del sys.modules['tendrl.common.log']
