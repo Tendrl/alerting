@@ -53,7 +53,7 @@ class NotificationPlugin(multiprocessing.Process):
         raise NotImplementedError()
 
     @abstractmethod
-    def set_destinations(self):
+    def set_destinations(self, alert):
         raise NotImplementedError()
 
     @abstractmethod

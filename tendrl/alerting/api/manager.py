@@ -1,16 +1,16 @@
+from flask.ext.api import status
 from flask import Flask
 from flask import request
 from flask import Response
-from flask.ext.api import status
+import json
 import logging
 from multiprocessing import Event
 from multiprocessing import Process
-from tendrl.alerting.persistence.exceptions import EtcdError
 from tendrl.alerting.exceptions import AlertingError
 from tendrl.alerting.exceptions import InvalidRequest
 from tendrl.alerting.notification.exceptions import InvalidHandlerConfig
 from tendrl.alerting.notification.exceptions import NotificationPluginError
-import yaml
+from tendrl.alerting.persistence.exceptions import EtcdError
 
 
 LOG = logging.getLogger(__name__)
@@ -52,11 +52,11 @@ def get_alerts(filter_criteria=None):
     try:
         if len(request.args) > 0:
             return Response(
-                yaml.safe_dump(persister.get_alerts(request.args.items())),
+                json.dumps(persister.get_alerts(request.args.items())),
                 mimetype='application/json'
             )
         return Response(
-            yaml.safe_dump(persister.get_alerts()),
+            json.dumps(persister.get_alerts()),
             mimetype='application/json'
         )
     except EtcdError as ex:
@@ -81,7 +81,7 @@ def add_destination(name):
 def get_alert_types():
     try:
         return Response(
-            yaml.safe_dump(persister.get_alert_types()),
+            json.dumps(persister.get_alert_types()),
             mimetype='application/json'
         )
     except EtcdError as ex:
@@ -107,7 +107,7 @@ class APIManager(Process):
 
     def run(self):
         try:
-            app.run(host=self.host, port=self.port)
+            app.run(host=self.host, port=self.port, threaded=True)
             while not self._complete.is_set():
                 self._complete.wait(timeout=1)
         except Exception as ex:

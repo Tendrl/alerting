@@ -21,13 +21,23 @@ class TestAPIManager(object):
         return NotificationPluginManager(self.get_persister().get_store())
 
     def test_manager_constructor(self, monkeypatch):
-        manager = APIManager('0.0.0.0', '5001', self.get_notification_manager(), self.get_persister())
+        manager = APIManager(
+            '0.0.0.0',
+            '5001',
+            self.get_notification_manager(),
+            self.get_persister()
+        )
         assert manager.host == '0.0.0.0'
         assert isinstance(manager, APIManager)
         assert isinstance(manager._complete, multiprocessing.synchronize.Event)
 
     def test_manager_start(self, monkeypatch):
-        manager = APIManager('0.0.0.0', '5001', self.get_notification_manager(), self.get_persister())
+        manager = APIManager(
+            '0.0.0.0',
+            '5001',
+            self.get_notification_manager(),
+            self.get_persister()
+        )
 
         def mock_start():
             return
