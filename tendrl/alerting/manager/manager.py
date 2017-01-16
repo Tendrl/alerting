@@ -8,26 +8,23 @@ from tendrl.alerting.notification.manager import NotificationPluginManager
 from tendrl.alerting.persistence.persister import AlertingEtcdPersister
 from tendrl.alerting.watcher.manager import AlertsWatchManager
 from tendrl.commons.config import ConfigNotFound
-from tendrl.commons.config import TendrlConfig
-from tendrl.commons import log
+from tendrl.commons.config import load_config
+from tendrl.commons.log import setup_logging
 
 
 LOG = logging.getLogger(__name__)
-config = TendrlConfig('alerting', '/etc/tendrl/tendrl.conf')
+config = load_config(
+    'alerting',
+    '/etc/tendrl/alerting/alerting.conf.sample'
+)
 
 
 class AlertingManager(object):
     def __init__(self):
         try:
-            api_server_addr = config.get(
-                "alerting",
-                "api_server_addr"
-            )
-            api_server_port = config.get(
-                "alerting",
-                "api_server_port"
-            )
-            persister = AlertingEtcdPersister(config)
+            api_server_addr = config["configuration"]["api_server_addr"]
+            api_server_port = config["configuration"]["api_server_port"]
+            persister = AlertingEtcdPersister()
             self.alert_queue = multiprocessing.Queue()
             storage_server = persister.get_store()
             self.n_plugin_manager = NotificationPluginManager(storage_server)
@@ -38,14 +35,8 @@ class AlertingManager(object):
                 persister
             )
             persister.write_configs(
-                config.get(
-                    "alerting",
-                    "api_server_addr"
-                ),
-                config.get(
-                    "alerting",
-                    "api_server_port"
-                )
+                config["configuration"]["api_server_addr"],
+                config["configuration"]["api_server_port"]
             )
             persister.update_defs()
             self.watch_manager = AlertsWatchManager(
@@ -86,10 +77,7 @@ class AlertingManager(object):
 
 
 def main():
-    log.setup_logging(
-        config.get('alerting', 'log_cfg_path'),
-        config.get('alerting', 'log_level')
-    )
+    setup_logging(config["configuration"]['log_cfg_path'])
     manager = AlertingManager()
 
     def terminate(sig, frame):
