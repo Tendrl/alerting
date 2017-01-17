@@ -1,22 +1,19 @@
-from ConfigParser import SafeConfigParser
 import etcd
 import json
 from mock import MagicMock
 import sys
+sys.modules['tendrl.commons.config'] = MagicMock()
 sys.modules['tendrl.common.log'] = MagicMock()
 from tendrl.alerting.persistence.persister import AlertingEtcdPersister
 import uuid
 import yaml
+del sys.modules['tendrl.commons.config']
 del sys.modules['tendrl.common.log']
 
 
 class TestNotificationManager(object):
     def get_persister(self):
-        cParser = SafeConfigParser()
-        cParser.add_section('commons')
-        cParser.set('commons', 'etcd_connection', '0.0.0.0')
-        cParser.set('commons', 'etcd_port', '2379')
-        return AlertingEtcdPersister(cParser)
+        return AlertingEtcdPersister()
 
     def get_alert(self, resource, alert_id, node_id=None):
         alert = {

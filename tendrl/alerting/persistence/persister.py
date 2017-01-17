@@ -22,7 +22,7 @@ config = load_config(
 
 
 class AlertingEtcdPersister(EtcdPersister):
-    def __init__(self, config):
+    def __init__(self):
         etcd_kwargs = {
             'port': int(config["configuration"]["etcd_port"]),
             'host': config["configuration"]["etcd_connection"]

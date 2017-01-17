@@ -3,12 +3,14 @@ import multiprocessing
 import sys
 sys.modules['tendrl.commons.config'] = MagicMock()
 sys.modules['tendrl.commons.log'] = MagicMock()
+sys.modules['tendrl.alerting.persistence.persister'] = MagicMock()
 from tendrl.alerting.api.manager import APIManager
 from tendrl.alerting.manager import manager
 from tendrl.alerting.manager.manager import AlertingManager
 from tendrl.alerting.watcher.manager import AlertsWatchManager
 del sys.modules['tendrl.commons.config']
 del sys.modules['tendrl.commons.log']
+del sys.modules['tendrl.alerting.persistence.persister']
 
 
 class TestManager(object):

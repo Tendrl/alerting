@@ -1,19 +1,16 @@
-from ConfigParser import SafeConfigParser
 from mock import MagicMock
 import sys
+sys.modules['tendrl.commons.config'] = MagicMock()
 sys.modules['tendrl.common.log'] = MagicMock()
 from tendrl.alerting.notification.manager import NotificationPluginManager
 from tendrl.alerting.persistence.persister import AlertingEtcdPersister
 del sys.modules['tendrl.common.log']
+del sys.modules['tendrl.commons.config']
 
 
 class TestNotificationManager(object):
     def get_etcd_store(self):
-        cParser = SafeConfigParser()
-        cParser.add_section('commons')
-        cParser.set('commons', 'etcd_connection', '0.0.0.0')
-        cParser.set('commons', 'etcd_port', '2379')
-        return AlertingEtcdPersister(cParser).get_store()
+        return AlertingEtcdPersister()._store
 
     def test_constructor(self, monkeypatch):
         etcd_server = self.get_etcd_store()

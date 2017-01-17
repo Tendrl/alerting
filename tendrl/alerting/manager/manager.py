@@ -26,7 +26,7 @@ class AlertingManager(object):
             api_server_port = config["configuration"]["api_server_port"]
             persister = AlertingEtcdPersister()
             self.alert_queue = multiprocessing.Queue()
-            storage_server = persister.get_store()
+            storage_server = persister._store
             self.n_plugin_manager = NotificationPluginManager(storage_server)
             self.api_manager = APIManager(
                 api_server_addr,
@@ -41,7 +41,7 @@ class AlertingManager(object):
             persister.update_defs()
             self.watch_manager = AlertsWatchManager(
                 self.alert_queue,
-                AlertingEtcdPersister(config).get_store().client
+                storage_server.client
             )
         except (AlertingError, ConfigNotFound) as ex:
             raise ex

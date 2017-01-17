@@ -4,7 +4,6 @@ import sys
 sys.modules['tendrl.commons.config'] = MagicMock()
 from tendrl.alerting.api.manager import APIManager
 from tendrl.alerting.notification.manager import NotificationPluginManager
-from tendrl.alerting.persistence.persister import config
 import tendrl.alerting.persistence.persister as persister
 from tendrl.alerting.persistence.persister import AlertingEtcdPersister
 del sys.modules['tendrl.commons.config']
@@ -21,14 +20,24 @@ class TestAPIManager(object):
         }
         return AlertingEtcdPersister()
 
-    def get_notification_manager(self):
-        return NotificationPluginManager(self.get_persister().get_store())
+    def get_notification_manager(self, monkeypatch):
+        etcd_server = self.get_persister()._store
+
+        def mock_etcd_server_write(path, data):
+            return
+
+        monkeypatch.setattr(
+            etcd_server.client,
+            'write',
+            mock_etcd_server_write
+        )
+        return NotificationPluginManager(etcd_server)
 
     def test_manager_constructor(self, monkeypatch):
         manager = APIManager(
             '0.0.0.0',
             '5001',
-            self.get_notification_manager(),
+            self.get_notification_manager(monkeypatch),
             self.get_persister()
         )
         assert manager.host == '0.0.0.0'
@@ -39,7 +48,7 @@ class TestAPIManager(object):
         manager = APIManager(
             '0.0.0.0',
             '5001',
-            self.get_notification_manager(),
+            self.get_notification_manager(monkeypatch),
             self.get_persister()
         )
 
