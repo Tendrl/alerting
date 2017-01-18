@@ -1,36 +1,43 @@
 from mock import MagicMock
 import multiprocessing
 import sys
-sys.modules['tendrl.common.config'] = MagicMock()
-sys.modules['tendrl.common.log'] = MagicMock()
+sys.modules['tendrl.commons.config'] = MagicMock()
+sys.modules['tendrl.commons.log'] = MagicMock()
+sys.modules['tendrl.alerting.persistence.persister'] = MagicMock()
 from tendrl.alerting.api.manager import APIManager
-from tendrl.alerting.manager import Manager
+from tendrl.alerting.manager import manager
+from tendrl.alerting.manager.manager import AlertingManager
 from tendrl.alerting.watcher.manager import AlertsWatchManager
-del sys.modules['tendrl.common.config']
-del sys.modules['tendrl.common.log']
+del sys.modules['tendrl.commons.config']
+del sys.modules['tendrl.commons.log']
+del sys.modules['tendrl.alerting.persistence.persister']
 
 
 class TestManager(object):
+
     def test_constructor(self, monkeypatch):
-        manager = Manager()
-        assert isinstance(manager.api_manager, APIManager)
-        assert isinstance(manager.watch_manager, AlertsWatchManager)
-        assert isinstance(manager.alert_queue, multiprocessing.queues.Queue)
+        manager.load_config = MagicMock()
+        aManager = AlertingManager()
+        assert isinstance(aManager.api_manager, APIManager)
+        assert isinstance(aManager.watch_manager, AlertsWatchManager)
+        assert isinstance(aManager.alert_queue, multiprocessing.queues.Queue)
 
     def test_start(self, monkeypatch):
-        manager = Manager()
+        manager.load_config = MagicMock()
+        aManager = AlertingManager()
 
         def mock_start():
             return
-        monkeypatch.setattr(manager, 'start', mock_start)
-        manager.start()
+        monkeypatch.setattr(aManager, 'start', mock_start)
+        aManager.start()
         assert True
 
     def test_stop(self, monkeypatch):
-        manager = Manager()
+        manager.load_config = MagicMock()
+        aManager = AlertingManager()
 
         def mock_stop():
             return
-        monkeypatch.setattr(manager, 'stop', mock_stop)
-        manager.stop()
+        monkeypatch.setattr(aManager, 'stop', mock_stop)
+        aManager.stop()
         assert True

@@ -1,8 +1,8 @@
-from ConfigParser import SafeConfigParser
 from mock import MagicMock
 import multiprocessing
 import pytest
 import sys
+sys.modules['tendrl.commons.config'] = MagicMock()
 sys.modules['tendrl.common.log'] = MagicMock()
 from tendrl.alerting.notification.handlers.mail_handler import EmailHandler
 from tendrl.alerting.notification.handlers.mail_handler import \
@@ -10,16 +10,13 @@ from tendrl.alerting.notification.handlers.mail_handler import \
 from tendrl.alerting.persistence.persister import AlertingEtcdPersister
 from tendrl.commons.etcdobj.etcdobj import Server as etcd_server
 del sys.modules['tendrl.common.log']
+del sys.modules['tendrl.commons.config']
 
 
 class Test_mail_handler(object):
 
     def get_etcd_server(self):
-        cParser = SafeConfigParser()
-        cParser.add_section('commons')
-        cParser.set('commons', 'etcd_connection', '10.70.42.142')
-        cParser.set('commons', 'etcd_port', '2379')
-        return AlertingEtcdPersister(cParser).get_store()
+        return AlertingEtcdPersister()._store
 
     def test_config_help(self, monkeypatch):
         expected_config_help = {

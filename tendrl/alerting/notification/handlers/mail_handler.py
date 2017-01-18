@@ -119,7 +119,7 @@ class EmailHandler(NotificationPlugin):
             )
             raise NotificationDispatchError(str(ex))
 
-    def set_destinations(self):
+    def set_destinations(self, alert):
         admin_config = {}
         user_configs = []
         try:
@@ -134,7 +134,11 @@ class EmailHandler(NotificationPlugin):
                         mail_config['auth'] = ""
                     admin_config = mail_config
                 else:
-                    user_configs.append(mail_config)
+                    if (
+                        mail_config['alert_subscriptions'] == '*' or
+                        alert.resource in mail_config['alert_subscriptions']
+                    ):
+                        user_configs.append(mail_config)
             self.admin_config = admin_config
             self.user_configs = user_configs
         except EtcdKeyNotFound as ex:
@@ -217,7 +221,7 @@ class EmailHandler(NotificationPlugin):
 
     def dispatch_notification(self, alert):
         try:
-            self.set_destinations()
+            self.set_destinations(alert)
         except NotificationDispatchError as ex:
             LOG.error('Exception caught attempting to email %s.\
                 Error %s' % (str(alert), str(ex)), exc_info=True)

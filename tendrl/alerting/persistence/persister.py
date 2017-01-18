@@ -6,6 +6,8 @@ from tendrl.alerting.manager.tendrl_definitions_alerting \
 from tendrl.alerting.persistence.exceptions import EtcdError
 from tendrl.alerting.persistence.tendrl_definitions \
     import TendrlDefinitions
+from tendrl.commons.config import load_config
+from tendrl.commons.etcdobj.etcdobj import Server as etcd_server
 from tendrl.commons.persistence.etcd_persister import EtcdPersister
 import time
 import yaml
@@ -13,11 +15,23 @@ import yaml
 
 LOG = logging.getLogger(__name__)
 
+config = load_config(
+    'commons',
+    '/etc/tendrl/commons/commons.conf.yaml'
+)
+
 
 class AlertingEtcdPersister(EtcdPersister):
-    def __init__(self, config):
-        super(AlertingEtcdPersister, self).__init__(config)
-        self._store = self.get_store()
+    def __init__(self):
+        etcd_kwargs = {
+            'port': int(config["configuration"]["etcd_port"]),
+            'host': config["configuration"]["etcd_connection"]
+        }
+        self._store = etcd_server(etcd_kwargs=etcd_kwargs)
+        super(
+            AlertingEtcdPersister,
+            self
+        ).__init__(self._store.client)
 
     def write_configs(self, api_server_addr, api_server_port):
         confs = {

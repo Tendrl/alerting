@@ -8,10 +8,9 @@ LOG = logging.getLogger(__name__)
 
 
 class AlertsWatchManager(multiprocessing.Process):
-    def __init__(self, alert_queue, etcd_client):
+    def __init__(self, alert_queue):
         super(AlertsWatchManager, self).__init__()
         self.alert_queue = alert_queue
-        self.etcd_client = etcd_client
 
     def run(self):
         try:
@@ -24,7 +23,7 @@ class AlertsWatchManager(multiprocessing.Process):
                 if new_alert is not None:
                     if new_alert.value is not None:
                         self.alert_queue.put(
-                            AlertUtils().to_obj(
+                            AlertUtils(self.etcd_client).to_obj(
                                 yaml.safe_load(new_alert.value)
                             )
                         )

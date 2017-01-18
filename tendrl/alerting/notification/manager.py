@@ -11,7 +11,6 @@ from tendrl.alerting.exceptions import InvalidRequest
 from tendrl.alerting.notification.exceptions import InvalidHandlerConfig
 from tendrl.alerting.notification.exceptions import NotificationDispatchError
 from tendrl.alerting.notification.exceptions import NotificationPluginError
-import yaml
 
 LOG = logging.getLogger(__name__)
 
@@ -53,7 +52,7 @@ class NotificationPlugin(multiprocessing.Process):
         raise NotImplementedError()
 
     @abstractmethod
-    def set_destinations(self):
+    def set_destinations(self, alert):
         raise NotImplementedError()
 
     @abstractmethod
@@ -162,7 +161,7 @@ class NotificationPluginManager(object):
     def get_config_help(self, name):
         for plugin in NotificationPlugin.plugins:
             if plugin.name.lower() == ("%s" % name).lower():
-                return yaml.safe_dump(plugin.get_config_help())
+                return plugin.get_config_help()
         raise InvalidRequest(
             'Invalid name passed as request arguement'
         )
