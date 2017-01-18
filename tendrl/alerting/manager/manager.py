@@ -15,7 +15,7 @@ from tendrl.commons.log import setup_logging
 LOG = logging.getLogger(__name__)
 config = load_config(
     'alerting',
-    '/etc/tendrl/alerting/alerting.conf.sample'
+    '/etc/tendrl/alerting/alerting.conf.yaml'
 )
 
 
@@ -40,8 +40,7 @@ class AlertingManager(object):
             )
             persister.update_defs()
             self.watch_manager = AlertsWatchManager(
-                self.alert_queue,
-                storage_server.client
+                self.alert_queue
             )
         except (AlertingError, ConfigNotFound) as ex:
             raise ex

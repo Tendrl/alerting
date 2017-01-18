@@ -11,7 +11,7 @@ from tendrl.alerting.exceptions import InvalidRequest
 from tendrl.alerting.notification.exceptions import InvalidHandlerConfig
 from tendrl.alerting.notification.exceptions import NotificationPluginError
 from tendrl.alerting.persistence.exceptions import EtcdError
-
+import yaml
 
 LOG = logging.getLogger(__name__)
 app = Flask(__name__)
@@ -23,7 +23,7 @@ persister = None
 def get_handlers():
     try:
         return Response(
-            plugin_manager.get_handlers(),
+            json.dumps(yaml.safe_load(plugin_manager.get_handlers())),
             mimetype='application/json'
         )
     except (
@@ -37,7 +37,7 @@ def get_handlers():
 def get_config_help(name):
     try:
         return Response(
-            plugin_manager.get_config_help(name),
+            json.dumps(plugin_manager.get_config_help(name)),
             mimetype='application/json'
         )
     except (
