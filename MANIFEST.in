@@ -1,6 +1,8 @@
 include LICENSE
 include AUTHORS
 include ChangeLog
+include requirements.txt
+include tendrl-alerting.service
 exclude .gitignore
 exclude .gitreview
 graft systemd
