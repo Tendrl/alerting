@@ -59,12 +59,15 @@ class AlertHandler(object):
                         curr_alert
                     ):
                         self.alert.save()
+                        self.classify_alert()
                     return
                 # else add this new alert to etcd
             self.alert.save()
+            self.classify_alert()
         except etcd.EtcdKeyNotFound:
             try:
                 self.alert.save()
+                self.classify_alert()
             except Exception as ex:
                 Event(
                     ExceptionMessage(
@@ -87,6 +90,9 @@ class AlertHandler(object):
                     }
                 )
             )
+
+    def classify_alert(self):
+        pass
 
     def handle(self, alert_obj):
         try:
@@ -120,7 +126,7 @@ class AlertHandlerManager(multiprocessing.Process):
             mod = importlib.import_module(handler_fqdn)
             clsmembers = inspect.getmembers(mod, inspect.isclass)
             for name, cls in clsmembers:
-                if cls.handles:
+                if issubclass(cls, AlertHandler) and cls.handles:
                     self.alert_handlers.append(cls.handles)
 
     def __init__(self):
