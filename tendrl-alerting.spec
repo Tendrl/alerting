@@ -1,5 +1,5 @@
 Name: tendrl-alerting
-Version: 1.1
+Version: 1.2
 Release: 1%{?dist}
 BuildArch: noarch
 Summary: Module for Tendrl Alerting
@@ -12,14 +12,13 @@ BuildRequires: pytest
 BuildRequires: systemd
 BuildRequires: python-mock
 
-Requires: python-etcd
+Requires: python-flask
 Requires: python-dateutil
-Requires: gevent
-Requires: python-greenlet
-Requires: msgpack-python
+Requires: python-etcd
+Requires: python-six
 Requires: pytz
-Requires: flask
-Requires: Flask-API
+Requires: PyYAML
+Requires: tendrl-commons
 
 %description
 Python module for Tendrl alerting
@@ -42,8 +41,9 @@ install -m  0755  --directory $RPM_BUILD_ROOT%{_var}/log/tendrl/alerting
 install -m  0755  --directory $RPM_BUILD_ROOT%{_sysconfdir}/tendrl/alerting
 install -m  0755  --directory $RPM_BUILD_ROOT%{_datadir}/tendrl/alerting
 install -Dm 0644 tendrl-alerting.service $RPM_BUILD_ROOT%{_unitdir}/tendrl-alerting.service
-install -Dm 0644 etc/tendrl/tendrl.conf.sample $RPM_BUILD_ROOT%{_sysconfdir}/tendrl/tendrl.conf
-install -Dm 0644 etc/logging.yaml.timedrotation.sample $RPM_BUILD_ROOT%{_sysconfdir}/tendrl/alerting_logging.yaml
+install -Dm 0644 etc/tendrl/alerting.conf.yaml.sample $RPM_BUILD_ROOT%{_sysconfdir}/tendrl/alerting/alerting.conf.yaml
+install -Dm 0644 etc/tendrl/alerting_logging.yaml.sample $RPM_BUILD_ROOT%{_sysconfdir}/tendrl/alerting/alerting_logging.yaml
+install -Dm 0644 etc/tendrl/email.conf.yaml.sample $RPM_BUILD_ROOT%{_sysconfdir}/tendrl/alerting/email.conf.yaml
 install -Dm 644 etc/*.sample $RPM_BUILD_ROOT%{_datadir}/tendrl/alerting/.
 
 %post
@@ -65,10 +65,11 @@ py.test -v tendrl/alerting/tests || :
 %doc README.rst
 %license LICENSE
 %{_datadir}/tendrl/alerting/
-%{_sysconfdir}/tendrl/tendrl.conf
-%{_sysconfdir}/tendrl/alerting_logging.yaml
+%{_sysconfdir}/tendrl/alerting/alerting.conf.yaml
+%{_sysconfdir}/tendrl/alerting/alerting_logging.yaml
+%{_sysconfdir}/tendrl/alerting/email.conf.yaml
 %{_unitdir}/tendrl-alerting.service
 
 %changelog
-* Tue Nov 01 2016 Timothy Asir Jeyasingh <tjeyasin@redhat.com> - 0.0.1-1
+* Tue Mar 07 2017 Timothy Asir Jeyasingh <tjeyasin@redhat.com> - 1.2-1
 - Initial build.

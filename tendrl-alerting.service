@@ -3,9 +3,9 @@ Description= Daemon to manage tendrl notifications
 
 [Service]
 Type=simple
+Environment="HOME=/var/lib/tendrl"
 ExecStart=/usr/bin/tendrl-alerting
 ExecReload=/bin/kill -HUP $MAINPID
-KillMode=process
 Restart=on-failure
 PrivateTmp=true
 
