@@ -46,3 +46,6 @@ class AlertingEtcdPersister(central_store.EtcdCentralStore):
 
     def save_notificationconfig(self, notification_config):
         tendrl_ns.etcd_orm.save(notification_config)
+
+    def save_clusteralert(self, cluster_alert):
+        tendrl_ns.etcd_orm.save(cluster_alert)
