@@ -2,6 +2,7 @@ from tendrl.alerting import constants
 from tendrl.alerting.objects \
     import AlertingBaseObject
 from tendrl.commons.etcdobj import EtcdObj
+from tendrl.commons.utils.time_utils import now
 
 alert_severity_map = {
     'INFO': 0,
@@ -24,6 +25,8 @@ class Alert(AlertingBaseObject):
         significance=None,
         ackedby=None,
         acked=None,
+        ack_comment=[],
+        acked_at=None,
         pid=None,
         source=None,
         *args,
@@ -41,6 +44,8 @@ class Alert(AlertingBaseObject):
         self.significance = significance
         self.ackedby = ackedby
         self.acked = acked
+        self.ack_comment = ack_comment
+        self.acked_at = acked_at
         self.pid = pid
         self.source = source
         self._etcd_cls = _AlertEtcd
@@ -89,6 +94,8 @@ class AlertUtils(object):
             time_stamp = new_alert.time_stamp
             new_alert.ackedby = constants.TENDRL
             new_alert.acked = True
+            new_alert.acked_at = now()
+            new_alert.ack_comment = ['System acked']
         new_alert.alert_id = existing_alert.alert_id
         new_alert.time_stamp = time_stamp
         return new_alert
