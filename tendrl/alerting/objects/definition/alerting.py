@@ -65,6 +65,96 @@ namespace.tendrl.alerting:
       value: alerting/alerts/$Alert.alert_id
       list: alerting/alerts
       help: "alerts"
+    NodeAlert:
+      attrs:
+        alert_id:
+          help: 'The unique identifier of alert'
+          type: String
+        node_id:
+          help: 'The unique identifier of node on which alert was detected'
+          type: String
+        time_stamp:
+          help: 'The timestamp at which alert was observed'
+          type: String
+        resource:
+          help: 'The resource with problem for which alert was raised'
+          type: String
+        current_value:
+          help: 'The current magnitude(status/utilization) of problem'
+          type: String
+        tags:
+          help: 'Alert specific fields that cannot be generalized for all alerts'
+          type: json
+        alert_type:
+          help: 'The type(status/percentage utilization) of alert'
+          type: String
+        severity:
+          help: 'The severity of alert'
+          type: String
+        significance:
+          help: 'The significance of notifying alert'
+          type: String
+        ackedby:
+          help: 'Entity/person acking the alert'
+          type: String
+        acked:
+          help: 'Indication of whether alert is acked or not'
+          type: Boolean
+        pid:
+          help: 'The id of process raising the alert'
+          type: String
+        source:
+          help: 'The process raising the alert'
+          type: String
+      enabled: true
+      value: alerting/nodes/$Alert.node_id/$Alert.alert_id
+      list: alerting/nodes/$Alert.node_id
+      help: "Node alerts"
+    ClusterAlert:
+      attrs:
+        alert_id:
+          help: 'The unique identifier of alert'
+          type: String
+        node_id:
+          help: 'The unique identifier of node on which alert was detected'
+          type: String
+        time_stamp:
+          help: 'The timestamp at which alert was observed'
+          type: String
+        resource:
+          help: 'The resource with problem for which alert was raised'
+          type: String
+        current_value:
+          help: 'The current magnitude(status/utilization) of problem'
+          type: String
+        tags:
+          help: 'Alert specific fields that cannot be generalized for all alerts'
+          type: json
+        alert_type:
+          help: 'The type(status/percentage utilization) of alert'
+          type: String
+        severity:
+          help: 'The severity of alert'
+          type: String
+        significance:
+          help: 'The significance of notifying alert'
+          type: String
+        ackedby:
+          help: 'Entity/person acking the alert'
+          type: String
+        acked:
+          help: 'Indication of whether alert is acked or not'
+          type: Boolean
+        pid:
+          help: 'The id of process raising the alert'
+          type: String
+        source:
+          help: 'The process raising the alert'
+          type: String
+      enabled: true
+      value: alerting/clusters/$Alert.tags['cluster_id']/$Alert.alert_id
+      list: alerting/clusters/$Alert.tags['cluster_id']
+      help: "Cluster alerts"
     NotificationMedia:
       attrs:
         media:

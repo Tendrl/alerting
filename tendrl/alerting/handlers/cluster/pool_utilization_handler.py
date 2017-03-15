@@ -1,17 +1,17 @@
 from tendrl.alerting.handlers import AlertHandler
-from tendrl.alerting.objects.node_alert import NodeAlert
+from tendrl.alerting.objects.cluster_alert import ClusterAlert
 
 
-class MemoryHandler(AlertHandler):
+class PoolUtilizationHandler(AlertHandler):
 
-    handles = 'memory'
-    representive_name = 'memory_alert'
+    handles = 'pool_utilization'
+    representive_name = 'pool_utilization_alert'
 
     def __init__(self):
         AlertHandler.__init__(self)
 
     def classify_alert(self):
-        NodeAlert(
+        ClusterAlert(
             alert_id=self.alert.alert_id,
             node_id=self.alert.node_id,
             time_stamp=self.alert.time_stamp,
