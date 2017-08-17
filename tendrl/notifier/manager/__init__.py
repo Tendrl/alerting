@@ -5,8 +5,8 @@ import signal
 from gevent.queue import Queue
 from tendrl.commons.event import Event
 from tendrl.commons.message import ExceptionMessage
-from tendrl.commons.message import Message
 from tendrl.commons import TendrlNS
+from tendrl.commons.utils.log_utils import log
 from tendrl.notifier.notification import NotificationPluginManager
 from tendrl.notifier import NotifierNS
 
@@ -58,14 +58,12 @@ def main():
     complete = gevent.event.Event()
 
     def terminate():
-        Event(
-            Message(
-                "debug",
-                "notifier",
-                {
-                    "message": 'Signal handler: stopping',
-                }
-            )
+        log(
+            "debug",
+            "notifier",
+            {
+                "message": 'Signal handler: stopping',
+            }
         )
         tendrl_notifier_manager.stop()
         complete.set()

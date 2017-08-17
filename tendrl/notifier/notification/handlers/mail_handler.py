@@ -7,7 +7,7 @@ from socket import error
 from tendrl.commons.config import load_config
 from tendrl.commons.event import Event
 from tendrl.commons.message import ExceptionMessage
-from tendrl.commons.message import Message
+from tendrl.commons.utils.log_utils import log
 from tendrl.notifier.notification import NotificationPlugin
 
 SSL_AUTHENTICATION = 'ssl'
@@ -159,15 +159,13 @@ class EmailHandler(NotificationPlugin):
                 not self.user_configs or
                 len(self.user_configs) == 0
             ):
-                Event(
-                    Message(
-                        "error",
-                        "alerting",
-                        {
-                            "message": 'No destinations configured to send'
-                            'alert notification'
-                        }
-                    )
+                log(
+                    "error",
+                    "alerting",
+                    {
+                        "message": 'No destinations configured to send'
+                        'alert notification'
+                    }
                 )
         except (
             AttributeError,
@@ -191,16 +189,14 @@ class EmailHandler(NotificationPlugin):
         try:
             msg = self.format_message(alert)
             if not self.admin_config:
-                Event(
-                    Message(
-                        "debug",
-                        "alerting",
-                        {
-                            "message": 'Detected alert %s.'
-                            'But, admin config is a must to send'
-                            ' notification' % msg
-                        }
-                    )
+                log(
+                    "debug",
+                    "alerting",
+                    {
+                        "message": 'Detected alert %s.'
+                        'But, admin config is a must to send'
+                        ' notification' % msg
+                    }
                 )
                 return
             server = self.get_mail_client()
@@ -215,15 +211,13 @@ class EmailHandler(NotificationPlugin):
                 self.user_configs,
                 msg
             )
-            Event(
-                Message(
-                    "debug",
-                    "alerting",
-                    {
-                        "message": 'Sent mail to %s to alert about %s'
-                        % (self.user_configs, msg)
-                    }
-                )
+            log(
+                "debug",
+                "alerting",
+                {
+                    "message": 'Sent mail to %s to alert about %s'
+                    % (self.user_configs, msg)
+                }
             )
         except (
             error,
@@ -233,7 +227,6 @@ class EmailHandler(NotificationPlugin):
             smtplib.SMTPSenderRefused,
             Exception
         ) as ex:
-            raise ex
             Event(
                 ExceptionMessage(
                     priority="debug",
@@ -245,6 +238,7 @@ class EmailHandler(NotificationPlugin):
                     }
                 )
             )
+            raise ex
         finally:
             if server:
                 server.close()

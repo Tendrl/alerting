@@ -31,7 +31,7 @@ rm -rf html/.{doctrees,buildinfo}
 
 %install
 %{__python} setup.py install --single-version-externally-managed -O1 --root=$RPM_BUILD_ROOT --record=INSTALLED_FILES
-install -m  0755  --directory $RPM_BUILD_ROOT%{_var}/log/tendrl/notifier
+# install -m  0755  --directory $RPM_BUILD_ROOT%{_var}/log/tendrl/notifier
 install -m  0755  --directory $RPM_BUILD_ROOT%{_sysconfdir}/tendrl/notifier
 install -m  0755  --directory $RPM_BUILD_ROOT%{_datadir}/tendrl/notifier
 install -Dm 0644 tendrl-notifier.service $RPM_BUILD_ROOT%{_unitdir}/tendrl-notifier.service
@@ -55,7 +55,7 @@ systemctl enable tendrl-notifier
 py.test -v tendrl/notifier/tests || :
 
 %files -f INSTALLED_FILES
-%dir %{_var}/log/tendrl/notifier
+# %dir %{_var}/log/tendrl/notifier
 %dir %{_sysconfdir}/tendrl/notifier
 %dir %{_datadir}/tendrl/notifier
 %doc README.rst
