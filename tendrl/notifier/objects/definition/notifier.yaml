@@ -1,5 +1,5 @@
 ---
-namespace.alerting:
+namespace.notifier:
   objects:
     NotificationMedia:
       attrs:
