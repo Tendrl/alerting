@@ -16,8 +16,6 @@ TLS_AUTHENTICATION = 'tls'
 
 class EmailHandler(NotificationPlugin):
 
-    handler = "smtp"
-
     def get_config_help(self):
         config_help = {
             'email_id': {
