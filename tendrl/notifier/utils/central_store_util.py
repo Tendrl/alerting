@@ -1,8 +1,8 @@
 from etcd import EtcdException
 from etcd import EtcdKeyNotFound
-from tendrl.notifier.objects.alert import Alert
-from tendrl.notifier.objects.cluster_alert import ClusterAlert
-from tendrl.notifier.objects.node_alert import NodeAlert
+from tendrl.commons.objects.alert import Alert
+from tendrl.commons.objects.cluster_alert import ClusterAlert
+from tendrl.commons.objects.node_alert import NodeAlert
 
 
 def read_key(key):
