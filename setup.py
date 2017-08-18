@@ -16,7 +16,7 @@ def read_module_contents():
 
 
 def read_spec_contents():
-    with open('tendrl-notifier.spec') as spec:
+    with open('tendrl-alerting.spec') as spec:
         return spec.read()
 
 module_file = read_module_contents()
@@ -55,7 +55,7 @@ class BumpVersionCommand(Command):
         old = 'Version: %s' % metadata['version']
         new = 'Version: %s' % self.version
         spec_file = read_spec_contents()
-        with open('tendrl-notifier.spec', 'w') as fileh:
+        with open('tendrl-alerting.spec', 'w') as fileh:
             fileh.write(spec_file.replace(old, new))
 
         # Commit everything with a standard commit message
@@ -98,7 +98,7 @@ class ReleaseCommand(Command):
 
 
 setup(
-    name="tendrl-notifier",
+    name="tendrl-alerting",
     version=version,
     packages=find_packages(exclude=["*.tests", "*.tests.*", "tests.*",
                                     "tests"]),
@@ -113,8 +113,8 @@ setup(
         ],
     include_package_data=True,
     entry_points={
-        'console_scripts': ['tendrl-notifier = '
-                            'tendrl.notifier.manager'
+        'console_scripts': ['tendrl-alerting = '
+                            'tendrl.alerting.manager'
                             ':main'
                             ]
     },

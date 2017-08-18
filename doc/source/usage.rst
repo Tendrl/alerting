@@ -2,6 +2,6 @@
 Usage
 ========
 
-To use notifier in a project::
+To use alerting in a project::
 
-    import notifier
+    import alerting

@@ -2,7 +2,7 @@ include LICENSE
 include AUTHORS
 include ChangeLog
 include requirements.txt
-include tendrl-notifier.service
+include tendrl-alerting.service
 include version.py
 exclude .gitignore
 exclude .gitreview

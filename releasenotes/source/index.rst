@@ -1,5 +1,5 @@
 ============================================
- notifier Release Notes
+ alerting Release Notes
 ============================================
 
 .. toctree::

@@ -1,4 +1,4 @@
-NAME=tendrl-notifier
+NAME=tendrl-alerting
 VERSION := $(shell PYTHONPATH=. python -c \
              'import version; print version.__version__' \
              | sed 's/\.dev[0-9]*//')
@@ -33,9 +33,9 @@ gitversion:
 	$(eval RELEASE := $(GIT_RELEASE).$(SHORTCOMMIT))
 	sed -i version.py \
 	  -e "s/^__version__ = .*/__version__ = '$(VERSION)'/"
-	sed -i tendrl-notifier.spec \
+	sed -i tendrl-alerting.spec \
 	  -e "s/^Version: .*/Version: $(VERSION)/"
-	sed -i tendrl-notifier.spec \
+	sed -i tendrl-alerting.spec \
 	  -e "s/^Release: .*/Release: $(RELEASE)/"
 
 snapshot: gitversion srpm

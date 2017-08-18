@@ -4,13 +4,13 @@ Installation
 
 Note: node-agent is required for logging(functional dependency)
 
-1. Install Notifier yum install tendrl-notifier::
+1. Install Alerting yum install tendrl-alerting::
 
-   yum install tendrl-notifier
+   yum install tendrl-alerting
 
-2. Configure notifier::
+2. Configure alerting::
 
-    Open /etc/tendrl/notifier/notifier.conf.yaml
+    Open /etc/tendrl/alerting/alerting.conf.yaml
    
     update -->
 
@@ -18,7 +18,7 @@ Note: node-agent is required for logging(functional dependency)
 
 3. Configure email source::
 
-    Open /etc/tendrl/notifier/email.conf.yaml
+    Open /etc/tendrl/alerting/email.conf.yaml
    
     update -->
 
@@ -30,18 +30,18 @@ Note: node-agent is required for logging(functional dependency)
 
 
     Note: If SMTP server supports only authenticated email, 
-    follow the template as in: /etc/tendrl/notifier/email_auth.conf.yaml.sample
+    follow the template as in: /etc/tendrl/alerting/email_auth.conf.yaml.sample
           And accordingly enable the following:
 
         auth = <ssl/tls>
 
         email_pass = <password corresponding to email_id for authenticating to smtp server>
 
-4. Enable and start notifier service::
+4. Enable and start alerting service::
 
-   systemctl enable tendrl-notifier
+   systemctl enable tendrl-alerting
 
-   systemctl start tendrl-notifier
+   systemctl start tendrl-alerting
 
 Note: 
 
