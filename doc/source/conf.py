@@ -25,7 +25,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'alerting'
+project = u'notifier'
 copyright = u'2016, Tendrl Project'
 
 # If true, '()' will be appended to :func: etc. cross-reference text.

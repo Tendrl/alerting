@@ -1,0 +1,13 @@
+---
+namespace.notifier:
+  objects:
+    NotificationMedia:
+      attrs:
+        media:
+          help: 'The list of supported notification medium'
+          type: List
+      list: alerting/notification_medium/supported/
+      value: alerting/notification_medium/supported/
+      help: "Supported means of notification"
+      enabled: true
+tendrl_schema_version: 0.3
