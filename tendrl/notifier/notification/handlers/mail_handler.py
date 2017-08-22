@@ -59,20 +59,37 @@ class EmailHandler(NotificationPlugin):
 
     def set_destinations(self):
         # TODO(gowtham):Get user ids from indexes who enabled
-        # email notification
-        pass
+        # email notification, for now it is come from users path
+        user_ids = []
+        try:
+            users = central_store_util.read_key('/_tendrl/users')
+            for user in users.leaves:
+                try:
+                    email_notifications = central_store_util.read_key(
+                        "%s/email_notifications" % user.key
+                    ).value
+                    if email_notifications == "true":
+                        user_ids.append(user.key.split("/")[-1])
+                except EtcdKeyNotFound:
+                    continue
+            return user_ids
+        except (
+            EtcdException,
+            ValueError,
+            KeyError,
+            SyntaxError
+        ) as ex:
+            raise ex
 
-    def get_alert_destinations(self):
+    def get_alert_destinations(self, user_ids):
         # TODO(gowtham): get user emailds only who have enabled
         # email notfication
         user_configs = []
         try:
-            users = central_store_util.read_key('/_tendrl/users')
-            for user in users.leaves:
-                user_key = user.key
+            for user_id in user_ids:
                 try:
                     user_email = central_store_util.read_key(
-                        "%s/email" % user_key
+                        "_tendrl/users/%s/email" % user_id
                     ).value
                     user_configs.append(user_email)
                 except EtcdKeyNotFound:
@@ -159,11 +176,9 @@ class EmailHandler(NotificationPlugin):
     def dispatch_notification(self, alert):
         server = None
         try:
-            self.set_destinations()
-            # TODO(gowtham): Pass user_id collected from 
-            # set_destinations
-            # For now notifications sent to all users
-            self.get_alert_destinations()
+            import pdb; pdb.set_trace();
+            user_ids = self.set_destinations()
+            self.get_alert_destinations(user_ids)
             if (
                 not self.user_configs or
                 len(self.user_configs) == 0
