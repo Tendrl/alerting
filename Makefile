@@ -1,14 +1,10 @@
-NAME=tendrl-alerting
+NAME=tendrl-notifier
 VERSION := $(shell PYTHONPATH=. python -c \
              'import version; print version.__version__' \
              | sed 's/\.dev[0-9]*//')
 RELEASE=1
 COMMIT := $(shell git rev-parse HEAD)
 SHORTCOMMIT := $(shell echo $(COMMIT) | cut -c1-7)
-GIT_RELEASE := $(shell git describe --tags --match 'v*' \
-                 | sed 's/^v//' \
-                 | sed 's/^[^-]*-//' \
-                 | sed 's/-.*//')
 
 all: srpm
 
@@ -29,14 +25,8 @@ rpm: dist
 
 gitversion:
 	# Set version and release to the latest values from Git
-	$(eval VERSION := $(VERSION).dev$(GIT_RELEASE))
-	$(eval RELEASE := $(GIT_RELEASE).$(SHORTCOMMIT))
-	sed -i version.py \
-	  -e "s/^__version__ = .*/__version__ = '$(VERSION)'/"
-	sed -i tendrl-alerting.spec \
-	  -e "s/^Version: .*/Version: $(VERSION)/"
-	sed -i tendrl-alerting.spec \
-	  -e "s/^Release: .*/Release: $(RELEASE)/"
+	sed -i $(NAME).spec \
+	  -e "/^Release:/cRelease: $(shell date +"%Y%m%dT%H%M%S").$(SHORTCOMMIT)"
 
 snapshot: gitversion srpm
 

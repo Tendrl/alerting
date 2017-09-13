@@ -66,7 +66,7 @@ class NotificationPluginManager(gevent.greenlet.Greenlet):
             Event(
                 ExceptionMessage(
                     priority="debug",
-                    publisher="alerting",
+                    publisher="notifier",
                     payload={
                         "message": 'Failed to load the time series db'
                         'plugins.',
@@ -98,7 +98,7 @@ class NotificationPluginManager(gevent.greenlet.Greenlet):
             Event(
                 ExceptionMessage(
                     priority="debug",
-                    publisher="alerting",
+                    publisher="notifier",
                     payload={
                         "message": 'Failed to intialize notification '
                         'manager',
@@ -130,7 +130,7 @@ class NotificationPluginManager(gevent.greenlet.Greenlet):
                 Event(
                     ExceptionMessage(
                         priority="debug",
-                        publisher="alerting",
+                        publisher="notifier",
                         payload={
                             "message": "Exception caught in notification "
                             "dispatch"

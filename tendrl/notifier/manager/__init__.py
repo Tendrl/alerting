@@ -25,7 +25,7 @@ class TendrlNotifierManager(object):
             Event(
                 ExceptionMessage(
                     priority="debug",
-                    publisher="alerting",
+                    publisher="notifier",
                     payload={
                         "message": 'Error intializing notification manager',
                         "exception": ex
