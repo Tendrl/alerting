@@ -1,6 +1,6 @@
 ---
-email_id: user1@tendrl.com
-email_smtp_server: smtp.tendrl.com
+email_id: user1@example.com
+email_smtp_server: smtp.example.com
 email_smtp_port: 465
 auth: ssl
 email_pass: password
