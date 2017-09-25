@@ -1,7 +1,7 @@
 [run]
 branch = True
-source = tendrl.alerting
-omit = tendrl/alerting/tests/*
+source = tendrl.notifier
+omit = tendrl/notifier/tests/*
 
 [report]
 ignore_errors = True
