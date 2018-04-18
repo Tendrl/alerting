@@ -1,3 +1,4 @@
+import json
 import smtplib
 
 from etcd import EtcdException
@@ -61,7 +62,7 @@ class EmailHandler(NotificationPlugin):
 
     def set_destinations(self):
         try:
-            key = "_tendrl/indexes/notifications/email_notifications"
+            key = "_tendrl/users"
             self.user_configs = self.get_alert_destinations(key)
         except (
             EtcdException,
@@ -80,9 +81,12 @@ class EmailHandler(NotificationPlugin):
         email_notifications = etcd_utils.read(key)
         for email_notification in email_notifications.leaves:
             email = etcd_utils.read(
-                email_notification.key
+                email_notification.key + "/data"
             ).value
-            email_ids.append(email)
+            email = json.loads(email)
+            if str(email.get("email_notifications", "")).lower() == "true":
+                if email.get("email", None):
+                    email_ids.append(email["email"])
         return email_ids
 
     def format_message(self, alert):
