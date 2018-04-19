@@ -125,7 +125,7 @@ class NotificationPluginManager(threading.Thread):
                 alerts = get_alerts()
                 for alert in alerts:
                     alert.tags = json.loads(alert.tags)
-                    if alert.delivered == "False":
+                    if str(alert.delivered).lower() == "false":
                         lock = etcd.Lock(
                             NS._int.wclient,
                             'alerting/alerts/%s' % alert.alert_id
