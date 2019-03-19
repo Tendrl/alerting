@@ -11,7 +11,7 @@ BuildRequires: pytest
 BuildRequires: systemd
 BuildRequires: python-mock
 
-Requires: python2-pyasn1 >= 0.3.7 
+Requires: python2-pyasn1 
 Requires: python2-crypto >= 2.6.1
 Requires: pysnmp
 Requires: tendrl-commons
